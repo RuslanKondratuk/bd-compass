@@ -1,0 +1,264 @@
+db.students.insertOne({
+    name: "John",
+    age: 30
+})
+
+db.students.find({
+    firstName: 'John'
+})
+
+db.students.insertOne({
+    firstName: "Rick",
+    faculty: {
+        address: {
+            city: "Dnipro",
+            street: "Centralna"
+        }
+    }
+});
+db.inventory.insertMany([
+    { "item": "journal", "qty": 25, "size": { "h": 14, "w": 21, "uom": "cm" }, "status": "A" },
+    { "item": "notebook", "qty": 50, "size": { "h": 8.5, "w": 11, "uom": "in" }, "status": "A" },
+    { "item": "paper", "qty": 100, "size": { "h": 8.5, "w": 11, "uom": "in" }, "status": "D" },
+    { "item": "planner", "qty": 75, "size": { "h": 22.85, "w": 30, "uom": "cm" }, "status": "D" },
+    { "item": "postcard", "qty": 45, "size": { "h": 10, "w": 15.25, "uom": "cm" }, "status": "A" }
+])
+
+db.inventory.find();
+
+db.inventory.find({
+    status: {
+        $nin: ['A', 'D']
+    }
+})
+
+db.inventory.find({
+    status: {
+        $in: ['A', 'D']
+    }
+});
+
+
+db.inventory.find({
+    $or:[{
+        status: 'A'
+    },  {
+        qty: {
+            $gte: 45
+        }
+        }
+    ]
+});
+
+db.inventory.find({
+    $and:[{
+        status: 'A'
+    },
+        {
+        "size.h": {
+            $gt: 10
+        }
+        }
+    ]
+});
+
+db.students.find({
+    firstName: {
+        $exists: true
+    },
+    lastName: {
+        $exists: true
+    }
+});
+
+
+db.students.find({
+    firstName, lastName: {
+        $exists: true
+    }})
+
+db.students.drop();
+
+db.inventory.insertMany( [
+   { item: "canvas", qty: 100, size: { h: 28, w: 35.5, uom: "cm" }, status: "A" },
+   { item: "journal", qty: 25, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
+   { item: "mat", qty: 85, size: { h: 27.9, w: 35.5, uom: "cm" }, status: "A" },
+   { item: "mousepad", qty: 25, size: { h: 19, w: 22.85, uom: "cm" }, status: "P" },
+   { item: "notebook", qty: 50, size: { h: 8.5, w: 11, uom: "in" }, status: "P" },
+   { item: "paper", qty: 100, size: { h: 8.5, w: 11, uom: "in" }, status: "D" },
+   { item: "planner", qty: 75, size: { h: 22.85, w: 30, uom: "cm" }, status: "D" },
+   { item: "postcard", qty: 45, size: { h: 10, w: 15.25, uom: "cm" }, status: "A" },
+   { item: "sketchbook", qty: 80, size: { h: 14, w: 21, uom: "cm" }, status: "A" },
+   { item: "sketch pad", qty: 95, size: { h: 22.85, w: 30.5, uom: "cm" }, status: "A" }
+] );
+
+db.inventory.updateMany({
+    status: "A"
+}, {
+    $set: {
+        status: 'New'
+    }
+})
+
+db.inventory.updateMany({
+    "size.uom": 'in'},
+    {
+        $set: {
+            "size.uom": 'ft'
+        }
+    }
+)
+
+db.inventory.find();
+
+db.inventory.deleteMany({
+    status: "new"
+})
+
+
+db.inventory.find({
+    $and:[
+        {
+            status: {
+                $in: ['P', 'D']
+            }
+        },
+        {
+        qty: {
+            $gte: 45
+        }
+        }
+    ]
+});
+
+
+db.inventory.find({
+    $or:[
+        {
+            status: 'P'
+        },
+        {
+            status: 'D',
+            qty: {
+                $gte: 45
+            }
+        }
+    ]
+});
+
+
+db.inventory.updateMany({
+    "size.w": {
+        $gt: 30
+    }
+}, {
+    $set: {
+        status: 'Done'
+    }
+})
+
+db.inventory.deleteMany({})
+
+db.createCollection("cats", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ['name', 'color', 'weight'],
+            properties: {
+                name: {
+                    bsonType: "string",
+                    description: "'name' must be a string and is a required"
+                },
+                color: {
+                    bsonType: 'string',
+                    description: "'color' must be a string and is a required"
+                },
+                weight: {
+                    bsonType: 'double',
+                    description: "'wieght' must be a string and is a required"
+                },
+                address: {
+                    bsonType: 'object',
+                    required: ['city', 'street'],
+                    properties: {
+                        city: {
+                            bsonType: "string",
+                            description: "'city' must be a string and is a required"
+                        },
+                        street: {
+                            bsonType: 'string',
+                            description: "'street' must be a string and is a required"
+                        }
+                    }
+                }
+            }
+        }
+    }
+})
+
+db.cats.insertOne({
+    name:'Murka',
+    color: 'red',
+    weight: 10.1,
+    address: {
+        city: 'Zaporozhye',
+        street: 'Sobornyi'
+    }
+})
+db.cats.insertOne({
+    name:'Murzil',
+    color: 'brown',
+    weight: 11.1,
+    address: {
+        house: 1
+    }
+})
+
+db.createCollection('users', {
+    validator: {
+        $jsonSchema: {
+            bsonType: 'object',
+            required: ['firstName', 'lastName', 'birthday', 'email', 'password'],
+            properties: {
+                firstName: {
+                    bsonType: 'string',
+                    description: "'first name' must be a string and is a required"
+                },
+                lastName: {
+                    bsonType: 'string',
+                    description: "'last name' must be a string and is a required"
+                },
+                birthday: {
+                    bsonType: 'date',
+                    description: "'birthday' must be a date and is a required"
+                },
+                email: {
+                    bsonType: 'string',
+                    description: "'email' must be a string and is a required"
+                },
+                password: {
+                    bsonType: 'string',
+                    description: "'password' must be a string and is a required"
+                },
+                address: {
+                    bsonType: 'object',
+                    required: ['city'],
+                    properties: {
+                        city: {
+                            bsonType: 'string',
+                            description: "'city' must be a string and is a required"
+                        },
+                        street: {
+                            bsonType: 'string',
+                        },
+                        house: {
+                            bsonType: 'string',
+                        },
+                    }
+                }
+            }
+
+        }
+    }
+})
+
