@@ -1,6 +1,6 @@
 {
     "development": {
-        "database": "fd-db",
+        "database": "fd-db-compass",
         "port": 27017,
         "host": "localhost"
     },

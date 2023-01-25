@@ -1,5 +1,6 @@
  const mongoose = require('mongoose');
- const User = require('./User')
+ const User = require('./User');
+ const Post = require('./Post')
 
  const CONFIG = require('../configs/db.json')["development"];
 
@@ -9,5 +10,6 @@
  })
 
  module.exports = {
-    User
+    User,
+   Post
  };

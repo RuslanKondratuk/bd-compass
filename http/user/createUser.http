@@ -1,8 +1,8 @@
-POST http://localhost:5000/ HTTP/1.1
+POST http://localhost:5000/api/user/ HTTP/1.1
 Content-Type: application/json
 
 {
-    "firstName": 40,
+    "firstName": 1,
     "lastName": "Doe",
     "email": "doe@fdsa",
     "password": "qwerty"
