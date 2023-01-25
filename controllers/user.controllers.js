@@ -35,8 +35,7 @@ module.exports.updateUser = async( req, res, next) => {
     try {
         const{body, params: {userId}} = req;
         console.log(userId);
-        const updateUser = await User.findOneAndUpdate({
-            _id: userId}, body);
+        const updateUser = await User.findByIdAndUpdate(userId, body, {returnDocument:'after'});
         res.status(201).send(updateUser);
     } catch (error) {
         next(error)
@@ -46,9 +45,8 @@ module.exports.updateUser = async( req, res, next) => {
 module.exports.deleteUser = async( req, res, next) => {
     try {
         const{params: {userId}} = req;
-        const deleteUser = await User.deleteOne({
-            id: userId});
-        res.status(201).send(deleteUser);
+        const deleteUser = await User.findByIdAndDelete(userId);
+        res.status(204).send(deleteUser);
     } catch (error) {
         next(error)
     }
